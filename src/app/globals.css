@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+}
+
+/* biar peta tampil full */
+.leaflet-container {
+  width: 100%;
+  height: 100vh; /* bisa diganti misalnya 500px kalau tidak mau full */
+}
