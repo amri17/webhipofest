@@ -2,12 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+* {
+  box-sizing: border-box;
+}
+
+/* ===========================
+   Leaflet Styles (Global)
+   =========================== */
+/* Base Leaflet Styles */
+.leaflet-container {
+  @apply w-full h-[100vh]; /* Default full viewport height */
+  z-index: 0; /* Reset z-index untuk menghindari konflik */
+}
+
+/* Custom Map Container Variants */
+.map-container-md .leaflet-container {
+  @apply h-[500px]; /* Medium height */
+}
+
+.map-container-sm .leaflet-container {
+  @apply h-[300px]; /* Small height */
+}
+
+/* Popup Styling */
+.leaflet-popup-content-wrapper {
+  @apply rounded-md shadow-lg;
+}
+
+.leaflet-popup-content {
+  @apply my-2 mx-3;
+}
+
+/* Marker Fixes */
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  @apply !block; /* Memastikan marker tampil */
+}
+
+/* Fallback for dynamic maps */
+.map-fallback {
+  @apply h-[400px] bg-gray-100 animate-pulse;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.leaflet-popup-content {
+  margin: 8px 12px;
+}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  display: block;
+}
+
+/* ===========================
+   Home Page Styles (Scoped)
+   =========================== */
+.home-page {
+  position: relative;
+  min-height: 0vh;
+  overflow: hidden;
+}
+
+.home-page .home-background {
+  position: absolute;
+  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  background-image: url('/images/bg-home.jpg'); /* ✅ khusus untuk home page */
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+  filter: brightness(0.6);
+}
+
+.home-page .home-content {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: white;
+  text-align: center;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+.home-page .home-content h1 {
+  font-size: 3rem;
   margin: 0;
 }
 
-/* biar peta tampil full */
-.leaflet-container {
-  width: 100%;
-  height: 100vh; /* bisa diganti misalnya 500px kalau tidak mau full */
+.home-page .home-content p {
+  font-size: 1.25rem;
+}
+
+.home-page .home-content {
+  margin-left: 16rem; /* default ketika sidebar terbuka */
+  transition: margin-left 0.3s;
 }
