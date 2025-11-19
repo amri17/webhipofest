@@ -4,7 +4,7 @@ import { Pool } from "pg";
 // Setup koneksi ke PostgreSQL
 const pool = new Pool({
   user: "postgres",  // Username PostgreSQL
-  host: "localhost", // Host tempat database berada
+  host: "DATABASE_URL", // Host tempat database berada
   database: "Hipovest", // Nama database
   password: "1234",  // Password untuk user PostgreSQL
   port: 5432,        // Port default PostgreSQL
