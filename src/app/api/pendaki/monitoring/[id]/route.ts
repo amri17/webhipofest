@@ -13,7 +13,7 @@ const pool = new Pool({
 export async function GET(request, { params }) {
     const { id } = params;
     let client;
-    try {
+    try { 
     console.log(`Fetching data for ID: ${id}`);
     client = await pool.connect();
     

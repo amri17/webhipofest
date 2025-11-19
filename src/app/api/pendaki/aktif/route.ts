@@ -25,11 +25,14 @@ export async function GET() {
                 sh.suhu_tubuh,
                 sh.koordinat_lokasi,
                 sh.perangko_waktu,
+                sh.nama_pendaki,
                 sp.waktu_mulai
                 
             FROM status_hipotermia sh
             INNER JOIN status_pendakian sp ON sh.id_pendakian = sp.id_pendakian
             WHERE sp.sedang_mendaki = $1
+            AND sh.koordinat_lokasi IS NOT NULL
+            AND sh.koordinat_lokasi != 'undefined' 
             ORDER BY sh.id_pendakian, sh.perangko_waktu DESC
         `, ['berjalan']); // ✅ Hanya yang statusnya 'berjalan'
 

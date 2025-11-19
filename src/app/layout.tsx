@@ -1,22 +1,30 @@
+// src/app/layout.tsx
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import Sidebar from './sidebar'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Toaster } from "sonner";
+import NotificationBell from "./components/notificationBell";
 
 export const metadata: Metadata = {
   title: 'My App',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} flex`}>
-        <Sidebar />
-        <main className="flex-1 p-0 ml-60">
-          {children}
-        </main>
+    <html lang="id">
+      <body>
+        {/* Bell Notifikasi di semua halaman */}
+        <div className="fixed top-4 right-4 z-50">
+          <NotificationBell />
+        </div>
+        
+        {/* Toaster Global */}
+        <Toaster position="top-center" richColors />
+        
+        {children}
       </body>
     </html>
   )

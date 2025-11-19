@@ -104,25 +104,25 @@ const [pendakiData, setPendakiData] = useState<{
                 {/* Menampilkan data pendaki */}
                 <div className="space-y-6">
                     <div className="border border-gray-300 bg-teal-600/60 rounded-lg p-4 shadow-sm">
-                        <p className="block text-sm font-medium mb-2">Nama:</p>
+                        <p className="block text-sm font-medium mb-2">ID Status:</p>
                         <p className="text-lg">{pendakiData.id_status}</p>
                     </div>
 
                     <div className="border border-gray-300 bg-teal-600/60 px-4 py-3 rounded-lg p-4 shadow-sm">
-                        <p className="block text-sm font-medium mb-2">Jenis Kelamin:</p>
+                        <p className="block text-sm font-medium mb-2">ID Pendakian:</p>
                         <p className="text-lg">{pendakiData.id_pendakian}</p>
                     </div>
 
                     <div className="border border-gray-300 bg-teal-600/60 rounded-lg p-4 shadow-sm">
-                        <p className="block text-sm font-medium mb-2">Nomor Handphone:</p>
+                        <p className="block text-sm font-medium mb-2">Suhu Tubuh:</p>
                         <p className="text-lg">{pendakiData.suhu_tubuh}</p>
                     </div>
                     <div className="border border-gray-300 bg-teal-600/60 rounded-lg p-4 shadow-sm">
-                        <p className="block text-sm font-medium mb-2">Nomor Handphone:</p>
+                        <p className="block text-sm font-medium mb-2">Koordinat Lokasi:</p>
                         <p className="text-lg">{pendakiData.koordinat_lokasi}</p>
                     </div>
                     <div className="border border-gray-300 bg-teal-600/60 rounded-lg p-4 shadow-sm">
-                        <p className="block text-sm font-medium mb-2">Nomor Handphone:</p>
+                        <p className="block text-sm font-medium mb-2">Waktu:</p>
                         <p className="text-lg">{pendakiData.perangko_waktu}</p>
                     </div>
                 </div>

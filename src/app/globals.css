@@ -14,7 +14,7 @@ html, body {
 }
 
 /* ===========================
-   Leaflet Styles (Global)
+    Leaflet Styles (Global)
    =========================== */
 /* Base Leaflet Styles */
 .leaflet-container {
@@ -65,7 +65,7 @@ html, body {
 }
 
 /* ===========================
-   Home Page Styles (Scoped)
+    Home Page Styles (Scoped)
    =========================== */
 .home-page {
   position: relative;

@@ -3,10 +3,11 @@
 import Sidebar from "../app/sidebar";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import { FaBell, FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown } from 'react-icons/fa';
 import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import { Sun, Droplet, Wind } from "lucide-react";
+
 
 // Definisikan tipe data yang lebih spesifik
 interface WeatherData {
@@ -23,9 +24,9 @@ interface CurrentWeather {
 
 export default function HomePage() {
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
-  const [currentWeather, setCurrentWeather] = useState<CurrentWeather>(null);
-  const [notifCount] = useState(3);
+  const [currentWeather, setCurrentWeather] = useState<CurrentWeather| null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
 
   useEffect(() => {
     // Contoh data dummy
@@ -44,6 +45,7 @@ export default function HomePage() {
       condition: "Cerah",
     });
   }, []);
+
   return (
     <div className="relative flex h-screen items-center overflow-hidden bg-black w-screen">
       {/* Sidebar */}
@@ -51,23 +53,7 @@ export default function HomePage() {
       {/* Konten Utama*/}
       <div className={`fixed flex-col w-screen items-center max-w-full top-0 left-0 right-0 h-full bg-black z-0 transition-all duration-300 ${isSidebarOpen ? "md:ml-40" : "md:ml-10"} overflow-y-auto`}>
           {/* Header Notifikasi */}
-          <header className="fixed top-2 right-2 z-50 text-white px-4 py-4">
-              <motion.div
-        whileTap={{ scale: 1.3 }} // membesar saat klik
-        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-      <div className="relative cursor-pointer">
-        <FaBell size={28} />
-        
-        {/* Badge notifikasi */}
-        {notifCount > 0 && (
-          <span className="absolute -top-1 right-0 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
-            {notifCount}
-          </span>
-        )}
-      </div>
-    </motion.div>
-    </header>
+          
       <section className="relative flex h-screen w-screen overflow-hidden">
         <Image
           src="/images/volcano-3779159_1280.jpg"   // gambar ada di folder public
@@ -87,7 +73,7 @@ export default function HomePage() {
           HIPOVEST
         </h1>
         <h2 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-md z-10 relative mt-4">
-          Your Trekking Buddy with a Warning System
+          Your Hiking Buddy with Warning System
         </h2>
 
         {/* Deskripsi */}
@@ -316,6 +302,5 @@ export default function HomePage() {
         </section>
       </div>
       </div>
-  
     );
   }

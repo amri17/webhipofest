@@ -88,15 +88,15 @@ const countResult = await client.query(
     const urutanGlobal = totalGlobal + 1;
         
     
-    // ✅ GENERATE id_pendakian dengan format "id_pendaki urutan"
-    const id_pendakian = parseInt(`${id_pendaki}${urutanGlobal}`);
-    const result = await client.query(
-        `INSERT INTO status_pendakian 
-        (id_pendakian, id_pendaki, sedang_mendaki, waktu_mulai, waktu_selesai) 
-        VALUES ($1, $2, $3, NOW(), NULL) 
-         RETURNING *`,
-        [id_pendakian, id_pendaki, 'berjalan']
-    );
+// ✅ GENERATE id_pendakian dengan format urutan global saja
+const id_pendakian = urutanGlobal;
+const result = await client.query(
+    `INSERT INTO status_pendakian 
+    (id_pendakian, id_pendaki, sedang_mendaki, waktu_mulai, waktu_selesai) 
+    VALUES ($1, $2, $3, NOW(), NULL) 
+     RETURNING *`,
+    [id_pendakian, id_pendaki, 'berjalan']
+);
     // 3. 🎯 TAMBAHKAN INSERT KE status_hipotermia - INI YANG HILANG
             await client.query(
                 `INSERT INTO status_hipotermia 

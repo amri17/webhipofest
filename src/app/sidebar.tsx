@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { FaBars, FaHome, FaMap, FaUsers, FaUserPlus } from "react-icons/fa"
+import { FaBars, FaHome, FaUsers, FaUserPlus } from "react-icons/fa"
 import { GiHiking } from "react-icons/gi"
 
 interface SidebarProps {
@@ -66,12 +66,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             </Link>
           </li>
           
-          <li className="flex items-center hover:bg-teal-700 p-2 rounded transition-colors">
-            <Link href="/" className="flex items-center w-full">
-            <FaMap className="mr-2" />
-            {isOpen && <Link href="/peta">Peta</Link>}
-            </Link>
-          </li>
+          
         </ul>
       </nav>
             {/* Overlay untuk mobile */}

@@ -3,7 +3,7 @@
 import { useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../../sidebar"; 
-import { FaBell, FaPlay, FaStop } from "react-icons/fa";
+import { FaPlay, FaStop } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Link from "next/link"
 
@@ -110,23 +110,6 @@ export default function DataPendaki() {
             <div className={`flex flex-col flex-1 transition-all duration-300 p-6 overflow-y-auto ${
                 isSidebarOpen ? "md:ml-64" : "md:ml-16"
             }`}>
-                {/* Header notifikasi */}
-                <div className="flex justify-between items-center mb-6">
-                    <div>
-                        <h1 className="text-2xl font-bold">Data Pendaki</h1>
-                    </div>
-                    <motion.div
-                        whileTap={{ scale: 1.3 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    >
-                        <div className="relative cursor-pointer">
-                            <FaBell size={28} color="black" />
-                                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
-                                    3
-                                </span>
-                        </div>
-                    </motion.div>
-                </div>
 
                 {/* Daftar Pendaki */}
                 <div className="space-y-4">

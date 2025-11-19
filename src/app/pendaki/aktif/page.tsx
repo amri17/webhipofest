@@ -4,7 +4,7 @@ import Link from "next/link"
 import Sidebar from "../../sidebar"; 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaBell, FaCircle, FaMapMarkerAlt, FaStop } from "react-icons/fa";
+import { FaCircle, FaMapMarkerAlt, FaStop } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 // Define TypeScript interfaces
@@ -34,12 +34,21 @@ interface StopResponse {
     };
 }
 
-// Komponen lampu sesuai status
+// ✅ KOMPONEN LAMPU STATUS YANG DIPERBAIKI
 function LampuStatus({ status }: { status: string }) {
-    let  warna = "text-green-500";
-    if (status === "2") warna = "text-yellow-500";
-    else if (status === "3") warna = "text-red-500";
-    return <FaCircle size={20} className={warna}/>;
+    let warna = "text-green-500"; // default: normal
+    
+    if (status === "ringan") {
+        warna = "text-yellow-500";
+    } else if (status === "sedang") {
+        warna = "text-orange-500";
+    } else if (status === "berat") {
+        warna = "text-red-500";
+    } else if (status === "selesai") {
+        warna = "text-gray-400";
+    }
+    
+    return <FaCircle size={20} className={warna} />;
 }
 
 export default function DataPendakiAktif() {
@@ -49,46 +58,77 @@ export default function DataPendakiAktif() {
     const [loading, setLoading] = useState(false)
 
   // Ambil data awal dari API
-    useEffect(() => {
+useEffect(() => {
     const fetchData = async () => {
-        try {
+    try {
         setLoading(true);
-        const res = await fetch(`/api/pendaki/aktif`); // ✅ PERBAIKAN: endpoint yang benar
+        const res = await fetch(`/api/pendaki/aktif`);
         const data: ApiResponse = await res.json();
-        console.log("Data dari API:", data);
+        console.log("🔍 DATA MENTAH DARI API:", data);
         
         if (data.success && data.data) {
-          // Process koordinat_lokasi to extract latitude and longitude
-            const processedData = data.data.map((item) => {
-            const [latitude, longitude] = item.koordinat_lokasi.split(',').map((coord) => parseFloat(coord.trim()));
-            return {
-                ...item,
-        // Tambahkan field untuk kompatibilitas dengan frontend lama
-            latitude: isNaN(latitude) ? -7.455 : latitude,
-            longitude: isNaN(longitude) ? 110.438 : longitude
-            };
-        });
+        // Process koordinat_lokasi to extract latitude and longitude
+// Process koordinat_lokasi to extract latitude and longitude
+// Process koordinat_lokasi to extract latitude and longitude - GUNAKAN KEMBALI PARSING ASLI
+const processedData = data.data.map((item, index) => {
+    console.log(`🔍 Item ${index} - koordinat_lokasi:`, item.koordinat_lokasi);
+    
+    let latitude: number | undefined = undefined;
+    let longitude: number | undefined = undefined;
+    
+// Dalam useEffect, ganti hanya bagian parsing:
+if (item.koordinat_lokasi && item.koordinat_lokasi !== 'undefined') {
+    try {
+        // ✅ HAPUS KURUNG jika ada
+        let cleanCoord = item.koordinat_lokasi.trim();
+        
+        // Hapus kurung buka dan tutup
+        if (cleanCoord.startsWith('(') && cleanCoord.endsWith(')')) {
+            cleanCoord = cleanCoord.slice(1, -1).trim(); // Hapus kurung pertama dan terakhir
+        }
+        
+        console.log(`🔍 Setelah hapus kurung: '${cleanCoord}'`);
+        
+        const coords = cleanCoord.split(',');
+        
+        if (coords.length === 2) {
+            const latStr = coords[0].trim();
+            const lngStr = coords[1].trim();
+            
+            console.log(`🔍 Parsing: '${latStr}' , '${lngStr}'`);
+            
+            if (latStr !== 'undefined' && latStr !== '' && !isNaN(parseFloat(latStr))) {
+                latitude = parseFloat(latStr);
+            }
+            if (lngStr !== 'undefined' && lngStr !== '' && !isNaN(parseFloat(lngStr))) {
+                longitude = parseFloat(lngStr);
+            }
+        }
+    } catch (error) {
+        console.error("❌ Error parsing coordinates:", error);
+    }
+}
+    
+    const result = {
+        ...item,
+        latitude,
+        longitude
+    };
+    
+    console.log(`✅ Result ${index}: lat=${latitude}, lng=${longitude}`);
+    return result;
+});
 
-        // Set data yang sudah diproses ke state
         setPendakiList(processedData);
-        console.log("Data processed:", processedData);
-        } else {
-        console.error("API returned error:", data);
-        setPendakiList([]);
         }
-        } catch (error) {
+    } catch (error) {
         console.error("Error fetching data:", error);
-        setPendakiList([]);
-        } finally {
+    } finally {
         setLoading(false);
-        }
+    }
     }
     fetchData();
-
-    // Auto-refresh data setiap 30 detik
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
-    }, []);
+}, []);
 
     // Fungsi untuk menghentikan proses
     const handleStop = async (idPendakian: number) => {
@@ -140,6 +180,23 @@ export default function DataPendakiAktif() {
     };
     return statusMap[status] || status;
     };
+    // ✅ FUNGSI UNTUK WARNA BACKGROUND BERDASARKAN STATUS
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'normal':
+                return 'bg-green-100 border-green-300';
+            case 'ringan':
+                return 'bg-yellow-100 border-yellow-300';
+            case 'sedang':
+                return 'bg-orange-100 border-orange-300';
+            case 'berat':
+                return 'bg-red-100 border-red-300';
+            case 'selesai':
+                return 'bg-gray-100 border-gray-300';
+            default:
+                return 'bg-white border-gray-300';
+        }
+    };
 
     if (loading) {
     return (
@@ -165,24 +222,6 @@ export default function DataPendakiAktif() {
         <div className={`flex flex-col flex-1 transition-all duration-300 p-6 overflow-y-auto ${
         isSidebarOpen ? "md:ml-64" : "md:ml-16"
         }`}>
-        {/* Header notifikasi */}
-        <div className="flex justify-between items-center mb-6">
-        <div>
-            <h1 className="text-2xl font-bold">Monitoring Pendaki Aktif</h1>
-            <p className="text-gray-600">Total: {pendakiList.length} pendaki sedang dimonitor</p>
-        </div>
-        <motion.div
-            whileTap={{ scale: 1.3 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-            <div className="relative cursor-pointer">
-            <FaBell size={28} color="black" />
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
-                {pendakiList.length}
-                </span>
-            </div>
-            </motion.div>
-        </div>
 
         <div className="space-y-4">
             {pendakiList.length === 0 ? (
@@ -198,16 +237,36 @@ export default function DataPendakiAktif() {
             ) : (
             <div className="space-y-4 pb-20">
                 {pendakiList.map((item) => (
-                <div key={item.id_pendakian} className="border border-gray-300 bg-white shadow-md rounded-lg px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div 
+                    key={item.id_pendakian} 
+                    className={`border-2 rounded-lg px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-md ${getStatusColor(item.level_hipotermia)}`}
+                >
                     <div className="flex-1">
-                    <p className="text-lg font-semibold text-gray-800">{item.nama_pendaki}</p>
+                    <p className="text-lg font-semibold text-gray-800"> Nama Pendaki: {item.nama_pendaki}</p>
                     <p className="text-sm text-gray-600">ID Pendakian: {item.id_pendakian}</p>
-                    <p className="text-sm text-gray-600">Status: {formatStatus(item.level_hipotermia)}</p>
+                    <p className="text-sm font-medium">
+                        Status: <span className={`font-bold ${
+                            item.level_hipotermia === 'normal' ? 'text-green-600' :
+                            item.level_hipotermia === 'ringan' ? 'text-yellow-600' :
+                            item.level_hipotermia === 'sedang' ? 'text-orange-600' :
+                            item.level_hipotermia === 'berat' ? 'text-red-600' :
+                            'text-gray-600'
+                        }`}>
+                        {formatStatus(item.level_hipotermia)}
+                        </span>
+                    </p>
                     <p className="text-sm text-gray-600">Terakhir update: {new Date(item.perangko_waktu).toLocaleString('id-ID')}</p>
                     <p className="text-sm text-gray-600">Lokasi: {item.koordinat_lokasi}</p>
                     </div>
                     <div className="flex flex-col items-center">
-                    <p className="text-2xl font-bold text-red-600">{item.suhu_tubuh}°C</p>
+                    <p className={`text-2xl font-bold ${
+                        item.level_hipotermia === 'berat' ? 'text-red-600' :
+                        item.level_hipotermia === 'sedang' ? 'text-orange-600' :
+                        item.level_hipotermia === 'ringan' ? 'text-yellow-600' :
+                        'text-green-600'
+                    }`}>
+                        {item.suhu_tubuh}°C
+                    </p>
                     <span className="text-sm text-gray-500">Suhu Tubuh</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -219,6 +278,7 @@ export default function DataPendakiAktif() {
                     >
                         <FaMapMarkerAlt /> GPS
                     </a>
+                    {/* ✅ LAMPU STATUS YANG SUDAH DIPERBAIKI */}
                     <LampuStatus status={item.level_hipotermia} />
                     <button 
                     onClick={() => router.push(`monitoring/${item.id_pendakian}`)}  // ✅ Path yang benar

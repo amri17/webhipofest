@@ -3,8 +3,6 @@
 import Sidebar from "../../sidebar";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { FaBell } from "react-icons/fa";
-import { motion } from "framer-motion";
 import Link from "next/link";
 
 
@@ -20,7 +18,6 @@ const [pendakiData, setPendakiData] = useState<{
     jenis_kelamin?: string;
     nomor_hp?: string;
 } | null>(null);
-    const [notifCount] = useState(3);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     useEffect (() => {
@@ -75,29 +72,6 @@ const [pendakiData, setPendakiData] = useState<{
             <div className={`flex flex-col flex-1 transition-all duration-300 p-6 overflow-y-auto ${
                 isSidebarOpen ? "md:ml-64" : "md:ml-16"
             }`}>
-                {/* Header notifikasi */}
-                <div className="flex justify-between items-center mb-6">
-                    <div>
-                        <h1 className="text-2xl font-bold">Detail Data Pendaki</h1>
-                        <p className="text-gray-600">Informasi lengkap data pendaki</p>
-                        <p className="text-gray-600">ID: {id}</p>
-                    </div>
-                    <motion.div
-                        whileTap={{ scale: 1.3 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    >
-                        <div className="relative cursor-pointer">
-                            <FaBell size={28} color="black" />
-                            
-                            {/* Badge notifikasi */}
-                            {notifCount > 0 && 
-                                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
-                                    {notifCount}
-                                </span>
-                            }
-                        </div>
-                    </motion.div>
-                </div>
                 
                 {/* Menampilkan data pendaki */}
                 <div className="space-y-6">
